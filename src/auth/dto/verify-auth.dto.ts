@@ -1,8 +1,8 @@
 import { PartialType } from '@nestjs/swagger';
 import { IsNumber } from 'class-validator';
-import { CreateAuthDto } from './create-auth.dto';
+import { LoginAuthDto } from './login-auth.dto';
 
-export class VerifyAuthDto extends PartialType(CreateAuthDto) {
+export class VerifyAuthDto extends PartialType(LoginAuthDto) {
   @IsNumber()
   code: number;
 }
