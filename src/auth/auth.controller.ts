@@ -9,8 +9,6 @@ export class AuthController {
 
   @Post('login')
   login(@Body() loginAuthDto: LoginAuthDto) {
-    console.log('run login routes');
-
     return this.authService.login(loginAuthDto);
   }
 

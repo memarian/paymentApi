@@ -1,9 +1,14 @@
 import { Module } from '@nestjs/common';
-import { PaymentService } from './payment.service';
+import { MongooseModule } from '@nestjs/mongoose';
 import { PaymentController } from './payment.controller';
+import { PaymentService } from './payment.service';
+import { Payment, PaymentSchema } from './schema/payments.schema';
 
 @Module({
+  imports: [
+    MongooseModule.forFeature([{ name: Payment.name, schema: PaymentSchema }]),
+  ],
   controllers: [PaymentController],
-  providers: [PaymentService]
+  providers: [PaymentService],
 })
 export class PaymentModule {}
