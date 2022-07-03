@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { IJwtPayload } from 'src/auth/interfaces/jwt.payload.interface';
 import { generateIntCode, getRandomUrl } from 'src/common/utils';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { IPaymentRes } from './interfaces/paymentRes.interface';
@@ -30,18 +31,14 @@ export class PaymentService {
     };
   }
 
-  async findAll(): Promise<Payment[]> {
-    const payments = await this.paymentModel.find().lean();
-    return payments;
-    // return payments.map((payment) => ({
+  async findAll(currentUser: IJwtPayload) {}
 
-    // }));
+  findUserById(id: string) {
+    return '';
   }
 
-  findByUserId(id: string) {}
-
-  findOne(id: number) {
-    return `This action returns a #${id} payment`;
+  async findOne(userId: string, id: string): Promise<PaymentsDocument> {
+    return await this.paymentModel.findOne({ userId });
   }
 
   update(id: number, updatePaymentDto: UpdatePaymentDto) {

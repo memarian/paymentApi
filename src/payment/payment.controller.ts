@@ -6,30 +6,37 @@ import {
   Param,
   ParseIntPipe,
   Patch,
-  Post
+  Post,
+  UseGuards
 } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+import { GetCurrentUser } from 'src/auth/decorators/get-user.decorator';
+import { IJwtPayload } from 'src/auth/interfaces/jwt.payload.interface';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { PaymentService } from './payment.service';
 
 @Controller('payment')
+@UseGuards(AuthGuard('jwt'))
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Post(':id')
-  create(@Param('id', ParseIntPipe) planId: number) {
-    console.log(planId, typeof planId);
-
-    return this.paymentService.create('62befeadffdef6fc98dbc0de', planId);
+  create(
+    @Param('id', ParseIntPipe) planId: number,
+    @GetCurrentUser() user: IJwtPayload,
+  ) {
+    console.log(user);
+    return this.paymentService.create(user.sub, planId);
   }
 
   @Get()
-  findAll() {
-    return this.paymentService.findAll();
+  findAll(@GetCurrentUser() user: IJwtPayload) {
+    return this.paymentService.findAll(user);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.paymentService.findOne(+id);
+    return this.paymentService.findOne('62befeadffdef6fc98dbc0de', id);
   }
 
   @Patch(':id')

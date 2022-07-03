@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 export type PaymentsDocument = Payment & Document;
 
-@Schema({ timestamps: true })
+@Schema({ timestamps: true, versionKey: false })
 export class Payment {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   userId: string;
