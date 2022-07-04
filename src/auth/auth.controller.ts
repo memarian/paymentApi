@@ -10,12 +10,11 @@ export class AuthController {
   @Post('login')
   @UseGuards(AuthGuard('local'))
   login(@Request() request) {
-    console.log(request.user);
     return this.authService.login(request.user);
   }
 
   @Post('code')
-  findAll(@Body() verifyAuthDto: VerifyAuthDto) {
+  verify(@Body() verifyAuthDto: VerifyAuthDto) {
     return this.authService.verify(verifyAuthDto);
   }
 }

@@ -9,8 +9,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { generateIntCode } from 'src/common/utils';
 import { VerifyAuthDto } from './dto/verify-auth.dto';
+import { Role } from './guards/roles.enum';
 import { IJwtPayload } from './interfaces/jwt.payload.interface';
-import { Roles } from './roles.enum';
 import { User, UserDocument } from './schema/user.schema';
 
 @Injectable()
@@ -30,16 +30,15 @@ export class AuthService {
 
     const user = await this.findByName(username);
 
-    if (user.password !== password && user.code !== code)
+    if (user.password !== password || user?.code !== code)
       throw new UnauthorizedException('invalid credential');
 
     user.code = null;
     await user.save();
 
-    if (username !== Roles.Admin)
-      return this.jwtSign({ sub: user.id, role: Roles.User });
+    const role = username === Role.USER ? Role.USER : Role.ADMIN;
 
-    return this.jwtSign({ sub: user.id, role: Roles.Admin });
+    return this.jwtSign({ sub: user.id, role });
   }
 
   jwtSign(payload: IJwtPayload) {

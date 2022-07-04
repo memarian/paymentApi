@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { Role } from 'src/auth/guards/roles.enum';
 import { IJwtPayload } from 'src/auth/interfaces/jwt.payload.interface';
 import { generateIntCode, getRandomUrl } from 'src/common/utils';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
@@ -31,21 +32,24 @@ export class PaymentService {
     };
   }
 
-  async findAll(currentUser: IJwtPayload) {}
-
-  findUserById(id: string) {
-    return '';
+  async findAll(currentUser: IJwtPayload) {
+    let query;
+    if (currentUser.role == Role.USER) query = { userId: currentUser.sub };
+    return await this.paymentModel.find(query).lean();
   }
 
   async findOne(userId: string, id: string): Promise<PaymentsDocument> {
-    return await this.paymentModel.findOne({ userId });
+    return await this.paymentModel.findOne({ id, userId });
   }
 
-  update(id: number, updatePaymentDto: UpdatePaymentDto) {
-    return `This action updates a #${id} payment`;
+  async update(id: string, userId: string, updatePaymentDto: UpdatePaymentDto) {
+    const payment = await this.findOne(userId, id);
+    // payment = {
+    //   ...updatePaymentDto,
+    // };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} payment`;
+  async remove(userId: string, id: string) {
+    return await this.paymentModel.remove({ id, userId });
   }
 }
