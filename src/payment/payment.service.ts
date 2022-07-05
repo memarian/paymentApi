@@ -50,6 +50,6 @@ export class PaymentService {
   }
 
   async remove(userId: string, id: string) {
-    return await this.paymentModel.remove({ id, userId });
+    return await this.paymentModel.remove({ userId, _id: id });
   }
 }

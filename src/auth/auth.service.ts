@@ -36,7 +36,7 @@ export class AuthService {
     user.code = null;
     await user.save();
 
-    const role = username === Role.USER ? Role.USER : Role.ADMIN;
+    const role = username === Role.ADMIN ? Role.ADMIN : Role.USER;
 
     return this.jwtSign({ sub: user.id, role });
   }
