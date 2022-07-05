@@ -1,8 +1,9 @@
 import { Type } from 'class-transformer';
-import { IsNumber } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 
 export class CreatePaymentDto {
   @Type(() => Number)
   @IsNumber()
+  @IsNotEmpty()
   planId: number;
 }

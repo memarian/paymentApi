@@ -43,10 +43,13 @@ export class PaymentService {
   }
 
   async update(id: string, userId: string, updatePaymentDto: UpdatePaymentDto) {
-    const payment = await this.findOne(userId, id);
-    // payment = {
-    //   ...updatePaymentDto,
-    // };
+    const payment = await this.paymentModel.findOneAndUpdate(
+      { _id: id, userId },
+      updatePaymentDto,
+      { new: true },
+    );
+
+    return payment;
   }
 
   async remove(userId: string, id: string) {
